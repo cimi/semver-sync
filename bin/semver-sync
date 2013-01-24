@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+var argv = require('optimist')
+    .usage('Synchronizes version numbers accross source files, package.json and component.json.' +
+        'Usage: $0 -s [source] -t [targets]')
+    .option('s', {
+        alias: 'source',
+        describe: 'Declare the file from which the version number will propagate. Defaults to package.json.',
+        default: 'package.json'})
+    .option('t', {
+        alias: 'target',
+        describe: 'Declare the files to which the version numbers will propagate from. Defaults to component.json.' +
+        'If multiple files are specifed, separate them with a comma.',
+        default: 'component.json'})
+    .argv
+;
+
+var targets = argv.target.split(',');
+console.log(argv, targets);
+

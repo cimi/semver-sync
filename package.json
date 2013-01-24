@@ -1,0 +1,32 @@
+{
+  "name": "semver-sync",
+  "version": "0.0.1",
+  "description": "Utility that keeps version numbers in sync between package.json, component.json and an optional source file.",
+  "keywords": [
+    "semver",
+    "version",
+    "sync"
+  ],
+  "author": {
+    "name": "Alex Ciminian",
+    "url": "http://improve.ro/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cimi/semver-sync.git"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "optimist": "0.3.5",
+    "semver": "1.1.2"
+  },
+  "devDependencies": {
+    
+  },
+  "bin": {
+    "topojson": "./bin/semver-sync"
+  },
+  "scripts": {
+    "test": "./node_modules/vows/bin/vows; echo"
+  }
+}
