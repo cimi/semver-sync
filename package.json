@@ -27,6 +27,6 @@
     "topojson": "./bin/semver-sync"
   },
   "scripts" : {
-    "test" : "tap ./test/*.js"
+    "test" : "tap ./test/*.js --stderr"
   }
 }
