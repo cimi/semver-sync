@@ -1,4 +1,8 @@
 {
   "name": "semver-sync",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "dependencies": {
+  	"first": "1.0.0",
+  	"second": "0.0.1"
+  }
 }
