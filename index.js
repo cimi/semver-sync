@@ -14,25 +14,39 @@ var getExtension = function (filename) {
 
 var count = 0;
 var traverse = function (node) {
-
-  // matching module.exports.version and exports.version
-  // TODO: also matches module.version which is not quite OK
+  // console.log(node);
+  // console.log("===========================")
+  var result;
   if (node.operator === '=' && node.left.property === 'version' 
-    && ~['module', 'exports'].indexOf(node.left.start.value)) {
+      && ~['module', 'exports'].indexOf(node.left.start.value)) {
+    // matching module.exports.version and exports.version
+    // TODO: also matches module.version which is not quite OK
     return node.right.end.value;
-  } else if (node.length) {
-    var result;
+  } else if (node.start && node.value && node.start.value == 'return' 
+      && node.value.start.value === '{' && node.value.end.value === '}') {
+     // console.log('aici');
+     node.value.properties.every(function (prop) {
+      if (prop.key === 'version') {
+        result = prop.value.value;
+        return false;
+      }
+    });
+    if (result) return result;
+  } else if (node.length || (node.body && node.body.length)) {
     // using every because we need
     // to break out of the loop
+    if (node.body && node.body.length) {
+      node = node.body;
+    }
     node.every(function (n) {
-      count++;
       result = traverse(n);
       return result ? false : true;
     });
     return result;
   } else if (node.body) {
-    count++;
     return traverse(node.body);
+  } else if (node.expression) {
+    return traverse(node.expression);
   }
 }
 
@@ -49,8 +63,8 @@ module.exports.getVersion = function (filename) {
     version = JSON.parse(data).version;
   } else if (ext === 'js') {
     var ast = uglify.parse(data);
+    // console.error(JSON.stringify(ast));
     version = traverse(ast);
-    // console.error(count);
   }
 
   if (!semver.valid(version)) {
