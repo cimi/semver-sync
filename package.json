@@ -21,12 +21,12 @@
     "semver": "1.1.2"
   },
   "devDependencies": {
-    
+    "tap" : "~0.2.4"
   },
   "bin": {
     "topojson": "./bin/semver-sync"
   },
-  "scripts": {
-    "test": "./node_modules/vows/bin/vows; echo"
+  "scripts" : {
+    "test" : "tap ./test/*.js"
   }
 }
