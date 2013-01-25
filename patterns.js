@@ -28,10 +28,10 @@ patterns.push(function (node) {
 
 patterns.push(function (node) {
   // matching object literals from assignments to exports
+  var result;
   if (node.operator === '=' && node.left.property === 'exports'
     && isObjectLiteral(node.right)) {
-    result = extractVersionProperty(node.right.properties);
-    if (result) return result;
+    return extractVersionProperty(node.right.properties);
   };
 });
 
@@ -39,9 +39,24 @@ patterns.push(function (node) {
   // matching return { [...], version: '...', [...] }
   if (node.start && node.value && node.start.value == 'return'
       && isObjectLiteral(node.value)) {
-    result = extractVersionProperty(node.value.properties);
-    if (result) return result;
+    return extractVersionProperty(node.value.properties);
   }
+});
+
+patterns.push(function (node) {
+  // matching generic assignments to .version or 
+  // literals containing the property 'version'
+  var result;
+  if (node.left && node.left.property === 'version') {
+    result = node.right.end.value;
+  } else if (node.value && isObjectLiteral(node.value)) {
+    result = extractVersionProperty(node.value.properties);
+  }
+  if (result) {
+    console.log('WARNING: found version number ' + result + 
+      ', but not directly assigned to module or exports.');
+  }
+  return result;
 });
 
 patterns.match = function (node) {
@@ -76,6 +91,8 @@ var traverse = function (node) {
       return traverse(node.body);
     } else if (node.expression) {
       return traverse(node.expression);
+    } else if (node.right && node.right.expression) {
+      return traverse(node.right.expression);
     }
   }
 }
@@ -85,5 +102,6 @@ var exports = module.exports = {};
 
 exports.parse = function (data) {
     var ast = uglify.parse(data);
+    console.log(JSON.stringify(ast, null, 2));
     return traverse(ast);
 }
