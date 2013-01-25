@@ -7,7 +7,7 @@ var DEFAULT_SEPARATOR = '\n'
 
 var exports = module.exports = { name: 'test' };
 
-module.exports.version = '1.0.1';
+module.exports.version = '1.0.2';
 
 var getExtension = function (filename) {
   var parts = filename.split('.');
