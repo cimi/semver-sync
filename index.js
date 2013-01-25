@@ -2,6 +2,9 @@ var fs = require('fs')
   , semver = require('semver')
   , patterns = require('./patterns');
 
+var DEFAULT_SEPARATOR = '\n'
+  , DEFAULT_ENCODING = 'utf-8';
+
 var exports = module.exports = { name: 'test' };
 
 module.exports.version = '0.0.1';
@@ -21,7 +24,7 @@ module.exports.getVersion = function (filename) {
     throw new Error('unsupported extension ' + ext);
   }
 
-  var data = fs.readFileSync(filename, 'utf-8');
+  var data = fs.readFileSync(filename, DEFAULT_ENCODING);
   if (ext === 'json') {
     data = '(' + data + ')';
   } 
@@ -36,16 +39,9 @@ module.exports.getVersion = function (filename) {
 
 module.exports.setVersion = function (arr, version) {
   arr.forEach(function (filename) {
-    var ext = getExtension(filename);
-    if (ext === 'json') {
-      fs.readFile(filename, function (err, data) {
-      });
-      // TODO: check here that we only replace the version
-      // number in the root and not for other dependencies
-    } else {
-      // TODO: throw an error if there is more than one occurence 
-      // of the version number in the file we're updating
-    }
+    var current = module.exports.getVersion(filename);
+    var lines = fs.readFileSync(filename, DEFAULT_ENCODING).split(DEFAULT_SEPARATOR);
+    lines[current.line - 1] = lines[current.line - 1].replace(current.version, version);
+    fs.writeFileSync(filename, lines.join(DEFAULT_SEPARATOR), DEFAULT_ENCODING);
   });
 };
-

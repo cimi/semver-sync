@@ -17,4 +17,4 @@ var argv = require('optimist')
 var targets = argv.target.split(',')
   , sync = require('../');
 
-var currentVersion = sync.getVersion(argv.source);
+var currentVersion = sync.setVersion([argv.source], '0.0.3');

@@ -32,9 +32,9 @@ test('version numbers come with line number infomation', function (t) {
 });
 
 test('setting version numbers', function (t) {
-    // sync.setVersion(['fixtures/package.json'], '0.0.5');
-    // t.equal(sync.getVersion('fixtures/package.json'), '0.0.5');
-    // sync.setVersion(['fixtures/package.json'], '0.0.1');
-    // t.equal(sync.getVersion('fixtures/package.json'), '0.0.1');
+    sync.setVersion(['fixtures/component.json'], '0.0.5');
+    t.equal(getVersion('fixtures/component.json'), '0.0.5');
+    sync.setVersion(['fixtures/component.json'], '0.0.1');
+    t.equal(getVersion('fixtures/component.json'), '0.0.1');
     t.end();
 });
