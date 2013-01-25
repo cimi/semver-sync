@@ -15,7 +15,7 @@ var count = 0;
 
 module.exports.getVersion = function (filename) {
 	var ext = getExtension(filename)
-    , version;  
+    , result;  
   
   if (!~['js', 'json'].indexOf(ext)) {
     throw new Error('unsupported extension ' + ext);
@@ -23,15 +23,17 @@ module.exports.getVersion = function (filename) {
 
   var data = fs.readFileSync(filename, 'utf-8');
   if (ext === 'json') {
-    version = JSON.parse(data).version;
+    result = {
+      version: JSON.parse(data).version
+    };
   } else if (ext === 'js') {
-    version = patterns.parse(data);
+    result = patterns.parse(data);
   }
 
-  if (!semver.valid(version)) {
+  if (!semver.valid(result.version)) {
     throw new Error('Missing or wrong semver number in ' + filename + '. Found: ' + version);
   }
-  return version;
+  return result;
 };
 
 module.exports.setVersion = function (arr, version) {

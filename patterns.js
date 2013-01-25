@@ -9,7 +9,10 @@ var extractVersionProperty = function (properties) {
   var result;
   properties.every(function (prop) {
     if (prop.key === 'version') {
-      result = prop.value.value;
+      result = {
+        version: prop.value.value,
+        line: prop.end.line
+      }
       return false;
     }
   });
@@ -23,7 +26,10 @@ patterns.push(function (node) {
   // TODO: also matches module.version which is not quite OK
   if (node.operator === '=' && node.left.property === 'version' 
     && ~['module', 'exports'].indexOf(node.left.start.value)) {
-  return node.right.end.value;
+    return {
+      version: node.right.end.value,
+      line: node.right.end.line
+    }
   }
 });
 
@@ -49,13 +55,16 @@ patterns.push(function (node) {
   // literals containing the property 'version'
   var result;
   if (node.left && node.left.property === 'version') {
-    result = node.right.end.value;
+    result = { 
+      version: node.right.end.value,
+      line: node.right.end.line
+    }
   } else if (node.value && isObjectLiteral(node.value)) {
     result = extractVersionProperty(node.value.properties);
   } else if (node.operator === '=' && isObjectLiteral(node.right)) {
     result = extractVersionProperty(node.right.properties);
   }
-  
+
   if (result) {
     console.log('WARNING: found version number ' + result + 
       ', but not directly assigned to module or exports.');
@@ -106,6 +115,5 @@ var exports = module.exports = {};
 
 exports.parse = function (data) {
     var ast = uglify.parse(data);
-    console.log(JSON.stringify(ast, null, 2));
     return traverse(ast);
 }
