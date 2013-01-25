@@ -5,7 +5,7 @@ var fs = require('fs')
 var DEFAULT_SEPARATOR = '\n'
   , DEFAULT_ENCODING = 'utf-8';
 
-var exports = module.exports = { name: 'test' };
+var exports = module.exports = { name: 'semver-sync' };
 
 module.exports.version = '1.0.2';
 
