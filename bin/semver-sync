@@ -77,7 +77,7 @@ var verify = function (sources, version) {
     console.log(ERROR + 'Version number is out of sync in ' + errSources.join(', ').red + '.');
     process.exit(1);
   } else {
-    console.log(SUCCESS + 'Everything is in sync, with version number ' + version.bold.green);
+    console.log(SUCCESS + 'Everything is in sync, the version number is ' + version.bold.green + '.');
   }  
 }
 
@@ -94,5 +94,6 @@ if (argv.bump) {
 
   version = semver.inc(version, argv.bump);
   sync.setVersion(sources, version);
-  console.log(SUCCESS + 'Version number was updated to ' + version.bold.green + ' in ' + sources.join(', ').bold);
+  console.log(SUCCESS + 'Version number was updated to ' + version.bold.green + ' in ' 
+    + sources.join(', ').bold + '.');
 }

@@ -53,7 +53,9 @@ semver-sync -b major
 
 ## How it works
 
-The module uses [UglifyJS 2](https://github.com/mishoo/UglifyJS2) to create an AST of the JavaScript and JSON sources passed in. The patterns used to find the nodes which hold the version properties are in the `patterns.js` file in the module. It should work on most types of structures, if you find one that doesn't please log an issue. The module has automated tests for this pattern matching, using some real-life libraries and it seems to work pretty well.
+The module uses [UglifyJS 2](https://github.com/mishoo/UglifyJS2) to create an AST of the JavaScript and JSON sources passed in. This approach is more flexible than matching strings or trying to find version numbers in source files.
+
+The AST patterns used to find the nodes which hold the version properties are in the `patterns.js` source file. It should work on most types of structures, if you find one that doesn't please log an issue. The module has automated tests for this pattern matching, using some real-life libraries and it seems to work pretty well.
 
 To check and bump the version number, the module uses the [node-semver](https://github.com/isaacs/node-semver) package.
 
