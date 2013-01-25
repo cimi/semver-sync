@@ -7,7 +7,7 @@ var DEFAULT_SEPARATOR = '\n'
 
 var exports = module.exports = { name: 'semver-sync' };
 
-module.exports.version = '1.0.2';
+module.exports.version = '1.0.3';
 
 var getExtension = function (filename) {
   var parts = filename.split('.');
