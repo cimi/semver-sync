@@ -73,7 +73,7 @@ patterns.push(function (node) {
   }
 
   if (result) {
-    console.log('WARNING: found version number ' + result + 
+    console.log('WARNING: found version number ' + result.version + 
       ', but not directly assigned to module or exports.');
   }
   return result;
