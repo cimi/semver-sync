@@ -3,18 +3,76 @@ var argv = require('optimist')
     .usage('Synchronizes version numbers accross source files, package.json and component.json.' +
         'Usage: $0 -s [source] -t [targets]')
     .option('s', {
-        alias: 'source',
-        describe: 'Declare the file from which the version number will propagate. Defaults to package.json.',
-        default: 'package.json'})
-    .option('t', {
-        alias: 'target',
-        describe: 'Declare the files to which the version numbers will propagate from. Defaults to component.json.' +
-        'If multiple files are specifed, separate them with a comma.',
-        default: 'component.json'})
+        alias: 'sources',
+        describe: 'Declare the JavaScript files in which the version number will be updated. If not explicitly ' 
+        + 'specified, it is read from the package.json "versionedSources" property. If it\'s not present in the '
+        + 'package.json and not explicitly specified, only component.json and package.json will be synced.'})
+    .option('b', {
+        alias: 'bump',
+        describe: 'Bump the version number in package.json, component.json and all other specified source files. '
+        + 'It can take one of the following values: major, minor, patch.',
+        default: 'patch'})
+    .option('v', {
+        alias: 'verify',
+        describe: 'Verifies that package.json, component.json and all other source files have the same version ' 
+        + 'number and checks if it conforms to the semver specification.'
+    })
     .argv
 ;
 
-var targets = argv.target.split(',')
-  , sync = require('../');
+var sync = require('../')
+  , fs = require('fs')
+  , colors = require('colors')
+  , semver = require('semver');
 
-var currentVersion = sync.setVersion([argv.source], '0.0.3');
+var ERROR = '[ERROR] '.bold.red
+  , SUCCESS = '[OK] '.bold.green;
+
+var sources = (function () {
+  if (!fs.existsSync('package.json')) {
+    console.log(ERROR + 'No package.json found in the current directory, exiting.')
+    process.exit(1);
+  }
+  var sources = ['package.json'];
+  if (fs.existsSync('component.json')) {
+    sources.push('component.json');
+  }
+
+  if (argv.sources) {
+    sources = sources.concat(argv.sources.split(','));
+  } else {
+    var packageJSON = JSON.parse('package.json');
+    if (packageJSON.versionedSources) {
+      sources = sources.concat(packageJSON.versionedSources.split(','));
+    }
+  }
+  return sources;
+})();
+
+var version = sync.getVersion('package.json').version;
+
+var errSources = [];
+sources.forEach(function (source) {
+  if (sync.getVersion(source).version !== version) {
+    errSources.push(source);   
+  }
+});
+
+if (errSources.length > 0) {
+  console.log(ERROR + 'Version number is out of sync in ' + errSources.join(', ').red + '.');
+  process.exit(1);
+} else {
+  console.log(SUCCESS + 'Everything is in sync, with version number ' + version);
+}
+
+
+if (argv.bump) {
+  if (!~['major', 'minor', 'patch'].indexOf(argv.bump)) {
+    console.log(ERROR + 'Invalid release name specified, please use ' + 'major, minor or patch.'.bold);
+    process.exit(1);
+  }
+
+  version = semver.inc(version, argv.bump);
+  sync.setVersion(sources, version);
+  console.log(SUCCESS + 'Version number was updated to ' + version);
+}
