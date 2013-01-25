@@ -1,7 +1,8 @@
 var uglify = require('uglify-js');
 
 var isObjectLiteral = function (node) {
-  return node.start.value === '{' && node.end.value === '}';
+  return node.start && node.end 
+      && node.start.value === '{' && node.end.value === '}';
 };
 
 var extractVersionProperty = function (properties) {
@@ -51,7 +52,10 @@ patterns.push(function (node) {
     result = node.right.end.value;
   } else if (node.value && isObjectLiteral(node.value)) {
     result = extractVersionProperty(node.value.properties);
+  } else if (node.operator === '=' && isObjectLiteral(node.right)) {
+    result = extractVersionProperty(node.right.properties);
   }
+  
   if (result) {
     console.log('WARNING: found version number ' + result + 
       ', but not directly assigned to module or exports.');
