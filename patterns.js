@@ -5,9 +5,15 @@ var isObjectLiteral = function (node) {
       && node.start.value === '{' && node.end.value === '}';
 };
 
+var isJSONObject = function (node) {
+  return node.start && node.end 
+      && node.start.value === '(' && node.end.value === ')'
+      && node.properties;
+}
+
 var extractVersionProperty = function (properties) {
   var result;
-  properties.every(function (prop) {
+  properties.forEach(function (prop, idx) {
     if (prop.key === 'version') {
       result = {
         version: prop.value.value,
@@ -15,6 +21,7 @@ var extractVersionProperty = function (properties) {
       }
       return false;
     }
+    return true;
   });
   return result;
 };
@@ -70,6 +77,14 @@ patterns.push(function (node) {
       ', but not directly assigned to module or exports.');
   }
   return result;
+});
+
+patterns.push(function (node) {
+  // matching simple object literals
+  // useful for JSON
+  if (isJSONObject(node)) {
+    return extractVersionProperty(node.properties);
+  }
 });
 
 patterns.match = function (node) {

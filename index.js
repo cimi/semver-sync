@@ -23,12 +23,10 @@ module.exports.getVersion = function (filename) {
 
   var data = fs.readFileSync(filename, 'utf-8');
   if (ext === 'json') {
-    result = {
-      version: JSON.parse(data).version
-    };
-  } else if (ext === 'js') {
-    result = patterns.parse(data);
-  }
+    data = '(' + data + ')';
+  } 
+
+  result = patterns.parse(data);
 
   if (!semver.valid(result.version)) {
     throw new Error('Missing or wrong semver number in ' + filename + '. Found: ' + version);
