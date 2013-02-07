@@ -49,6 +49,12 @@ semver-sync -b minor
 [OK] Version number was updated to 1.3.0 in package.json, component.json, mypackage.js.
 semver-sync -b major
 [OK] Version number was updated to 2.0.0 in package.json, component.json, mypackage.js.
+semver-sync -b 3.0.0-alpha1
+[OK] Version number was updated to 3.0.1-alpha1 in package.json, component.json, mypackage.js.
+semver-sync -b 3.0.0-beta2
+[OK] Version number was updated to 3.0.1-beta2 in package.json, component.json, mypackage.js.
+semver-sync -b 3.0.0-rc1
+[OK] Version number was updated to 3.0.1-rc1 in package.json, component.json, mypackage.js.
 ````
 
 If you want to update the version number automatically in all the files, commit the changes and create a new git tag, you can do:
@@ -58,7 +64,6 @@ semver-sync -t
 [OK] Version number was updated to 1.2.4 in package.json, component.json, mypackage.js.
 [OK] Files have been commited and tag v1.2.4 was created.
 ````
-
 
 ## How it works
 
@@ -77,10 +82,14 @@ Usage: **`semver-sync -s [source list] -b [release type]`**.
 Options:
 
 * `-b, --bump`
-   Bump the version number in package.json, component.json and all other specified source files. It can take one of the following values: `major`, `minor`, `patch`. If no value is specified, it defaults to `patch`.
+   Bump the version number in package.json, component.json and all other specified source files. It can take one of the following values: `major`, `minor`, `patch`. Alternatively you can specify a custom version that is higher than the current one. If no value is specified, it defaults to `patch`.
 * `-v, --verify`
    Verifies that package.json, component.json and all other source files have the same version number and checks if it conforms to the semver specification.
 * `-s, --sources`
   Declare additional files in which the version number will be updated or checked. If not explicitly specified, it is read from the package.json "versionedSources" property. If it's not present in the package.json and not explicitly specified, only component.json and package.json will be synced.
 * `-t, --tag`
-  Bump the version number, commit the changes to package.json, component.json and all other specified source files and create a git tag with the current version. It can take one of the following values: `major`, `minor`, `patch`. If no value is specified, it defaults to `patch`.
+  Bump the version number, commit the changes to package.json, component.json and all other specified source files and create a git tag with the current version. It can take one of the following values: `major`, `minor`, `patch`. Alternatively you can specify a custom version that is higher than the current one. If no value is specified, it defaults to `patch`.
+
+## License
+
+This package is released under [the MIT License](http://opensource.org/licenses/MIT).

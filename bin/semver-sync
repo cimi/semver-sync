@@ -15,8 +15,9 @@ var argv = optimist
     .option('b', {
         alias: 'bump',
         describe: 'Bump the version number in package.json, component.json and all other specified source files. '
-        + 'It can take one of the following values: ' + 'major, minor, patch'.bold + '. If no value is specified, ' +
-        'it defaults to ' + 'patch'.bold + '.'})
+        + 'It can take one of the following values: ' + 'major, minor, patch'.bold
+        + '. Alternatively you can specify a custom version that is higher than the current one. If no value is specified, '
+        + 'it defaults to ' + 'patch'.bold + '.'})
     .option('s', {
         alias: 'sources',
         describe: 'Declare the JavaScript files in which the version number will be updated. If not explicitly '
@@ -30,8 +31,9 @@ var argv = optimist
         alias: 'tag',
         describe: 'Bump the version number, commit the changes to package.json, component.json and all other specified source files '
         + 'and create a git tag with the current version. '
-        + 'It can take one of the following values: ' + 'major, minor, patch'.bold + '. If no value is specified, ' +
-        'it defaults to ' + 'patch'.bold + '.'})
+        + 'It can take one of the following values: ' + 'major, minor, patch'.bold
+        + '. Alternatively you can specify a custom version that is higher than the current one. If no value is specified, '
+        + 'it defaults to ' + 'patch'.bold + '.'})
     .argv
 ;
 
@@ -51,7 +53,7 @@ if (argv.bump === true) {
 }
 
 if (!fs.existsSync('package.json')) {
-  console.log(ERROR + 'No package.json found in the current directory, exiting.')
+  console.log(ERROR + 'No package.json found in the current directory, exiting.');
   process.exit(1);
 }
 
@@ -96,12 +98,16 @@ if (argv.verify || argv.bump || argv.tag) {
 }
 
 if (argv.bump || argv.tag) {
-  if (!~['major', 'minor', 'patch'].indexOf(argv.bump)) {
-    console.log(ERROR + 'Invalid release name specified, please use ' + 'major, minor or patch.'.bold);
+  if (semver.valid(argv.bump) && semver.gt(argv.bump, version)) {
+    version = argv.bump;
+  } else if (~['major', 'minor', 'patch'].indexOf(argv.bump)) {
+    version = semver.inc(version, argv.bump);
+  } else {
+    console.log(ERROR + 'Invalid release name specified, please use ' + 'major, minor, patch'.bold
+      + ', or specify a custom version that is higher than the current one.');
     process.exit(1);
   }
 
-  version = semver.inc(version, argv.bump);
   sync.setVersion(sources, version);
   console.log(SUCCESS + 'Version number was updated to ' + version.bold.green + ' in '
     + sources.join(', ').bold + '.');
