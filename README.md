@@ -73,3 +73,7 @@ Options:
    Verifies that package.json, component.json and all other source files have the same version number and checks if it conforms to the semver specification.
 * `-s, --sources`  
   Declare additional files in which the version number will be updated or checked. If not explicitly specified, it is read from the package.json "versionedSources" property. If it's not present in the package.json and not explicitly specified, only component.json and package.json will be synced.
+
+## License
+
+This package is released under [the MIT License](http://opensource.org/licenses/MIT).
