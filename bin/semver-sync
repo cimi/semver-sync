@@ -91,12 +91,11 @@ var verify = function (sources, version) {
   }
 }
 
-if (argv.verify) {
+if (argv.verify || argv.bump || argv.tag) {
   verify(sources, version);
 }
 
 if (argv.bump || argv.tag) {
-  verify(sources, version);
   if (!~['major', 'minor', 'patch'].indexOf(argv.bump)) {
     console.log(ERROR + 'Invalid release name specified, please use ' + 'major, minor or patch.'.bold);
     process.exit(1);
@@ -106,10 +105,10 @@ if (argv.bump || argv.tag) {
   sync.setVersion(sources, version);
   console.log(SUCCESS + 'Version number was updated to ' + version.bold.green + ' in '
     + sources.join(', ').bold + '.');
+}
 
-  if (argv.tag) {
-    sync.commitSourcesAndCreateTag(sources, version, function () {
-      console.log(SUCCESS + 'Files have been commited and tag ' + ('v' + version).bold.green + ' was created.');
-    });
-  }
+if (argv.tag) {
+  sync.commitSourcesAndCreateTag(sources, version, function () {
+    console.log(SUCCESS + 'Files have been commited and tag ' + ('v' + version).bold.green + ' was created.');
+  });
 }
