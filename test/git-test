@@ -1,0 +1,15 @@
+#!/bin/sh
+
+rm -rf tmp
+mkdir tmp
+cd tmp
+
+git init
+
+cp ../fixtures/package.json .
+cp ../fixtures/component.json .
+
+git add .
+git commit -m 'initial commit'
+
+touch test.txt
