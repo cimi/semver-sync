@@ -59,6 +59,14 @@ semver-sync -b 3.0.0-rc1
 [OK] Version number was updated to 3.0.1-rc1 in package.json, component.json, mypackage.js.
 ````
 
+If you want to update the version number automatically in all the files, commit the changes and create a new git tag, you can do:
+
+````
+semver-sync -t
+[OK] Version number was updated to 1.2.4 in package.json, component.json, mypackage.js.
+[OK] Files have been commited and tag v1.2.4 was created.
+````
+
 ## How it works
 
 The module uses [UglifyJS 2](https://github.com/mishoo/UglifyJS2) to create an AST of the JavaScript and JSON sources passed in. This approach is more flexible than matching strings or trying to find version numbers in source files.
@@ -81,6 +89,8 @@ Options:
    Verifies that package.json, component.json and all other source files have the same version number and checks if it conforms to the semver specification.
 * `-s, --sources`
   Declare additional files in which the version number will be updated or checked. If not explicitly specified, it is read from the package.json "versionedSources" property. If it's not present in the package.json and not explicitly specified, only component.json and package.json will be synced.
+* `-t, --tag`
+  Bump the version number, commit the changes to package.json, component.json and all other specified source files and create a git tag with the current version. It can take one of the following values: `major`, `minor`, `patch`. Alternatively you can specify a custom version that is higher than the current one. If no value is specified, it defaults to `patch`.
 
 ## License
 
