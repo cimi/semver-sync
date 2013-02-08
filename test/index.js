@@ -1,4 +1,5 @@
-var test = require('tap').test
+var exec = require('child_process').exec
+  , test = require('tap').test
   , sync = require('../');
 
 var getVersion = function (filename) {
@@ -43,4 +44,36 @@ test('setting version numbers', function (t) {
   sync.setVersion(['fixtures/complete/topojson.js'], '0.0.10');
 
   t.end();
+});
+
+test('commiting files and creating tag', function(t) {
+  options = {cwd: 'tmp'};
+  t.plan(3);
+
+  exec('./git-test', function (error, stdout, sterr) {
+    sync.setVersion(['tmp/package.json', 'tmp/component.json'], '0.0.2');
+    sync.commitSourcesAndCreateTag(['package.json', 'component.json'], '0.0.2' ,function () {
+
+      exec('git status -s', options, function(error, stdout, stderr) {
+        files = stdout.split('\n');
+        noStagedOrUnstagedFiles = true;
+        files.forEach(function(file){
+          if (file.match('component.json') || file.match('package.json')) {
+            noStagedOrUnstagedFiles = false;
+          }
+        });
+        t.ok(noStagedOrUnstagedFiles, 'no staged or unstaged files')
+      });
+
+      exec('git log -1 --pretty=%B', options, function(error, stdout, stderr) {
+        commit = stdout.replace(/\n/g,'');
+        t.equal(commit, 'v0.0.2', 'commit correctly created');
+      });
+
+      exec('git describe --abbrev=0 --tags', options, function(error, stdout, stderr) {
+        tag = stdout.replace(/\n/g,'');
+        t.equal(tag, 'v0.0.2', 'tag correctly created');
+      });
+    }, options);
+  });
 });
