@@ -16,8 +16,8 @@ var argv = optimist
         alias: 'bump',
         describe: 'Bump the version number in package.json, component.json and all other specified source files. '
         + 'It can take one of the following values: ' + 'major, minor, patch'.bold
-        + '. Alternatively you can specify a custom version that is higher than the current one. If no value is specified, ' +
-        'it defaults to ' + 'patch'.bold + '.'})
+        + '. Alternatively you can specify a custom version that is higher than the current one. If no value is specified, '
+        + 'it defaults to ' + 'patch'.bold + '.'})
     .option('s', {
         alias: 'sources',
         describe: 'Declare the JavaScript files in which the version number will be updated. If not explicitly '
@@ -27,14 +27,25 @@ var argv = optimist
         alias: 'verify',
         describe: 'Verifies that package.json, component.json and all other source files have the same version '
         + 'number and checks if it conforms to the semver specification.'})
+    .option('t', {
+        alias: 'tag',
+        describe: 'Bump the version number, commit the changes to package.json, component.json and all other specified source files '
+        + 'and create a git tag with the current version. '
+        + 'It can take one of the following values: ' + 'major, minor, patch'.bold
+        + '. Alternatively you can specify a custom version that is higher than the current one. If no value is specified, '
+        + 'it defaults to ' + 'patch'.bold + '.'})
     .argv
 ;
 
 
 
-if (argv.help || (!argv.verify && !argv.bump)) {
+if (argv.help || (!argv.verify && !argv.bump && !argv.tag)) {
   console.log(optimist.help());
   process.exit(0);
+}
+
+if (argv.tag && !argv.bump) {
+  argv.bump = argv.tag;
 }
 
 if (argv.bump === true) {
@@ -42,7 +53,7 @@ if (argv.bump === true) {
 }
 
 if (!fs.existsSync('package.json')) {
-  console.log(ERROR + 'No package.json found in the current directory, exiting.')
+  console.log(ERROR + 'No package.json found in the current directory, exiting.');
   process.exit(1);
 }
 
@@ -82,12 +93,11 @@ var verify = function (sources, version) {
   }
 }
 
-if (argv.verify) {
+if (argv.verify || argv.bump || argv.tag) {
   verify(sources, version);
 }
 
-if (argv.bump) {
-  verify(sources, version);
+if (argv.bump || argv.tag) {
   if (semver.valid(argv.bump) && semver.gt(argv.bump, version)) {
     version = argv.bump;
   } else if (~['major', 'minor', 'patch'].indexOf(argv.bump)) {
@@ -101,4 +111,10 @@ if (argv.bump) {
   sync.setVersion(sources, version);
   console.log(SUCCESS + 'Version number was updated to ' + version.bold.green + ' in '
     + sources.join(', ').bold + '.');
+}
+
+if (argv.tag) {
+  sync.commitSourcesAndCreateTag(sources, version, function () {
+    console.log(SUCCESS + 'Files have been commited and tag ' + ('v' + version).bold.green + ' was created.');
+  });
 }
