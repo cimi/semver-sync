@@ -5,6 +5,8 @@ mkdir tmp
 cd tmp
 
 git init
+git config user.email "alex@example.com"
+git config user.name "Alex Ciminian"
 
 cp ../fixtures/package.json .
 cp ../fixtures/component.json .

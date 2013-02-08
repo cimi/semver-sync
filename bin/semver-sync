@@ -38,8 +38,8 @@ var argv = optimist
 ;
 
 
-
 if (argv.help || (!argv.verify && !argv.bump && !argv.tag)) {
+  console.log('Running ' + 'semver-sync'.bold.green + ' version ' + sync.version.bold.green + '.\n');
   console.log(optimist.help());
   process.exit(0);
 }
