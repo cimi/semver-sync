@@ -47,12 +47,12 @@ module.exports.setVersion = function (arr, version) {
   });
 };
 
-module.exports.commitSourcesAndCreateTag = function (arr, version, callback) {
+module.exports.commitSourcesAndCreateTag = function (arr, version, callback, options) {
   var addSources = function(callback) {
     var file;
     if (!(file = arr.shift())) return callback();
 
-    exec('git add ' + file, function(error, stdout, stderr) {
+    exec('git add ' + file, options, function(error, stdout, stderr) {
       if (stderr) console.log(stderr);
       if (error !== null) throw error;
       addSources(callback);
@@ -60,7 +60,7 @@ module.exports.commitSourcesAndCreateTag = function (arr, version, callback) {
   };
 
   var commitSources = function(callback) {
-    exec('git commit -m "v' + version + '"', function(error, stdout, stderr) {
+    exec('git commit -m "v' + version + '"', options, function(error, stdout, stderr) {
       if (stderr) console.log(stderr);
       if (error !== null) throw error;
       callback();
@@ -68,7 +68,7 @@ module.exports.commitSourcesAndCreateTag = function (arr, version, callback) {
   };
 
   var createTag = function(callback) {
-    exec('git tag v' + version, function(error, stdout, stderr) {
+    exec('git tag v' + version, options, function(error, stdout, stderr) {
       if (stderr) console.log(stderr);
       if (error !== null) throw error;
       callback();
