@@ -2,6 +2,8 @@
 
 `semver-sync` is a node.js module that enables you to synchronize version numbers accross `package.json`, `component.json` and other source files of your choosing.
 
+[![Build Status](https://secure.travis-ci.org/cimi/semver-sync.png)](http://travis-ci.org/cimi/semver-sync)
+
 ## Installation
 
 You can install it via npm:
