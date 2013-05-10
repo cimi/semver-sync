@@ -15,6 +15,7 @@ test('reading version numbers from simple text fixtures', function (t) {
   t.equal(getVersion('fixtures/assigned.js'), '0.0.7', "module.exports.version assignment");
   t.equal(getVersion('fixtures/literal.js'), '0.10.29', "object literal returned from a module function");
   t.equal(getVersion('fixtures/assigned-literal.js'), '7.7.7', "object literal assigned to exports");
+  t.equal(getVersion('fixtures/amd.js'), '0.9.0', "object literal assigned to exports in AMD-style module");
   t.end();
 });
 
