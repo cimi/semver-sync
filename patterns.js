@@ -115,6 +115,12 @@ var traverse = function (node) {
         return result ? false : true;
       });
       return result;
+    } else if (node.args && node.args.length) {
+        node.args.every(function (n) {
+            result = traverse(n);
+            return result ? false : true;
+        });
+        return result;
     } else if (node.body) {
       return traverse(node.body);
     } else if (node.expression) {
