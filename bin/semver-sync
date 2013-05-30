@@ -2,9 +2,14 @@
 
 var sync = require('../')
   , fs = require('fs')
+  , path = require('path')
   , optimist = require('optimist')
   , colors = require('colors')
   , semver = require('semver');
+
+// Node.js: pre-0.8 it was path.existsSync; 0.8 and later it is
+// fs.existsSync
+var existsSync = fs.existsSync || path.existsSync;
 
 var ERROR = '[ERROR] '.bold.red
   , SUCCESS = '[OK] '.bold.green;
@@ -52,7 +57,7 @@ if (argv.bump === true) {
   argv.bump = 'patch';
 }
 
-if (!fs.existsSync('package.json')) {
+if (!existsSync('package.json')) {
   console.log(ERROR + 'No package.json found in the current directory, exiting.');
   process.exit(1);
 }
@@ -60,7 +65,7 @@ if (!fs.existsSync('package.json')) {
 var sources = (function () {
 
   var sources = ['package.json'];
-  if (fs.existsSync('component.json')) {
+  if (existsSync('component.json')) {
     sources.push('component.json');
   }
 
