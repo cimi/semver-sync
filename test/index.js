@@ -78,3 +78,16 @@ test('commiting files and creating tag', function(t) {
     }, options);
   });
 });
+
+test('running semver-sync', function (t) {
+  options = {cwd: 'tmp'};
+  t.plan(2);
+
+  exec('./exec-test', function (error, stdout, sterr) {
+    exec('../../bin/semver-sync -v', options,
+         function(error, stdout, stderr) {
+           t.equal(error, null);
+           t.equal(stdout.replace(/\033\[[0-9;]*m/g, ''), '[OK] Everything is in sync, the version number is 0.0.1.\n');
+         });
+  });
+});
