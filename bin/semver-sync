@@ -65,9 +65,13 @@ if (!existsSync('package.json')) {
 var sources = (function () {
 
   var sources = ['package.json'];
-  if (existsSync('component.json')) {
-    sources.push('component.json');
-  }
+
+  // supporting both bower variants
+  ['component.json', 'bower.json'].forEach(function (source) {
+    if (existsSync(source)) {
+      sources.push(source);
+    }
+  });
 
   if (argv.sources) {
     sources = sources.concat(argv.sources.split(','));
