@@ -2,9 +2,14 @@
 
 var sync = require('../')
   , fs = require('fs')
+  , path = require('path')
   , optimist = require('optimist')
   , colors = require('colors')
   , semver = require('semver');
+
+// Node.js: pre-0.8 it was path.existsSync; 0.8 and later it is
+// fs.existsSync
+var existsSync = fs.existsSync || path.existsSync;
 
 var ERROR = '[ERROR] '.bold.red
   , SUCCESS = '[OK] '.bold.green;
@@ -52,7 +57,7 @@ if (argv.bump === true) {
   argv.bump = 'patch';
 }
 
-if (!fs.existsSync('package.json')) {
+if (!existsSync('package.json')) {
   console.log(ERROR + 'No package.json found in the current directory, exiting.');
   process.exit(1);
 }
@@ -63,7 +68,7 @@ var sources = (function () {
 
   // supporting both bower variants
   ['component.json', 'bower.json'].forEach(function (source) {
-    if (fs.existsSync(source)) {
+    if (existsSync(source)) {
       sources.push(source);
     }
   });
