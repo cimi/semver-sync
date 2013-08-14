@@ -33,7 +33,7 @@ module.exports.getVersion = function (filename) {
   result = patterns.parse(data);
 
   if (!semver.valid(result.version)) {
-    throw new Error('Missing or wrong semver number in ' + filename + '. Found: ' + version);
+    throw new Error('Missing or wrong semver number in ' + filename + '. Found: ' + result.version);
   }
   return result;
 };
