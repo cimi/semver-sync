@@ -26,7 +26,7 @@ test('reading version numbers from actual libraries', function (t) {
   t.end();
 });
 
-test('version numbers come with line number infomation', function (t) {
+test('version numbers come with line number information', function (t) {
   t.equal(getLine('fixtures/package.json'), 4, 'Line numbers work for JSON.');
   t.equal(getLine('fixtures/complete/topojson.js'), 248, 'Line number determined correctly for topojson.js.');
   t.end();
