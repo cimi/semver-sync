@@ -84,12 +84,21 @@ var sources = (function () {
   return sources;
 })();
 
-var version = sync.getVersion('package.json').version;
+function getVersion(filename) {
+  var version = sync.getVersion(filename).version;
+  if (!semver.valid(version)) {
+      console.log(ERROR + 'Missing or wrong semver number in ' + filename + '. Found: ' + version);
+      process.exit(1);
+  }
+  return version;
+}
+
+var version = getVersion('package.json');
 
 var verify = function (sources, version) {
   var errSources = [];
   sources.forEach(function (source) {
-    if (sync.getVersion(source).version !== version) {
+    if (getVersion(source) !== version) {
       errSources.push(source);
     }
   });
