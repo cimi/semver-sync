@@ -33,7 +33,7 @@ semver-sync -v
 [OK] Everything is in sync, with version number 1.2.3
 ````
 
-If you accidentaly change the version number in one of the sources, or forget to update it, you'll see an error:
+If you accidentally change the version number in one of the sources, or forget to update it, you'll see an error:
 
 ````
 semver-sync -v
