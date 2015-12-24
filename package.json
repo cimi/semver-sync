@@ -12,6 +12,7 @@
     "name": "Alex Ciminian",
     "url": "http://improve.ro/"
   },
+  "license": "MIT",
   "engines": {
     "node": ">=0.4.0"
   },
