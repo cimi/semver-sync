@@ -81,6 +81,8 @@ var sources = (function () {
       sources = sources.concat(packageJSON.versionedSources.split(','));
     }
   }
+  // we filter out any duplicates from the sources array to prevent confusion in the output
+  sources = sources.filter(function (val, idx, arr) { return arr.indexOf(val) === idx });
   return sources;
 })();
 
