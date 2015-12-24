@@ -1,6 +1,6 @@
 {
   "name": "semver-sync",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "versionedSources": "index.js",
   "description": "Utility that keeps version numbers in sync between package.json, component.json and an optional source file.",
   "keywords": [
