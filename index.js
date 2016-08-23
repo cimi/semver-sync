@@ -1,7 +1,8 @@
 var exec = require('child_process').exec
   , fs = require('fs')
   , semver = require('semver')
-  , patterns = require('./patterns');
+  , patterns = require('./patterns')
+  , tspatterns = require("./tspatterns");
 
 var DEFAULT_SEPARATOR = '\n'
   , DEFAULT_ENCODING = 'utf-8';
@@ -21,7 +22,7 @@ module.exports.getVersion = function (filename) {
 	var ext = getExtension(filename)
     , result;
 
-  if (!~['js', 'json'].indexOf(ext)) {
+  if (!~['js', 'json', 'ts'].indexOf(ext)) {
     throw new Error('unsupported extension ' + ext);
   }
 
@@ -30,7 +31,12 @@ module.exports.getVersion = function (filename) {
     data = '(' + data + ')';
   }
 
-  result = patterns.parse(data);
+  if (ext === 'json' || ext === 'js') {
+    result = patterns.parse(data);
+  }
+  else if (ext === "ts") {
+    result = tspatterns.parse(filename, data);
+  }
 
   return result;
 };

@@ -22,18 +22,21 @@
   },
   "main": "./index.js",
   "dependencies": {
+    "colors": "0.6.0-1",
     "optimist": "0.3.5",
     "semver": "1.1.2",
-    "uglify-js": "2.2.3",
-    "colors": "0.6.0-1"
+    "typescript": "^1.8.10",
+    "uglify-js": "2.2.3"
   },
   "devDependencies": {
-    "tap" : "~0.2.4"
+    "del": "^2.2.2",
+    "fs-extra": "^0.30.0",
+    "tap": "~0.2.4"
   },
   "bin": {
     "semver-sync": "./bin/semver-sync"
   },
-  "scripts" : {
-    "test" : "tap ./test/*.js --stderr"
+  "scripts": {
+    "test": "tap ./test/*.js --stderr"
   }
 }
