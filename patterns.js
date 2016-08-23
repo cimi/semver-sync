@@ -1,12 +1,12 @@
 var uglify = require('uglify-js');
 
 var isObjectLiteral = function (node) {
-  return node.start && node.end 
+  return node.start && node.end
       && node.start.value === '{' && node.end.value === '}';
 };
 
 var isJSONObject = function (node) {
-  return node.start && node.end 
+  return node.start && node.end
       && node.start.value === '(' && node.end.value === ')'
       && node.properties;
 }
@@ -31,7 +31,7 @@ var patterns = [];
 patterns.push(function (node) {
   // matching module.exports.version = '...' and exports.version = '...'
   // TODO: also matches module.version which is not quite OK
-  if (node.operator === '=' && node.left.property === 'version' 
+  if (node.operator === '=' && node.left.property === 'version'
     && ~['module', 'exports'].indexOf(node.left.start.value)) {
     return {
       version: node.right.end.value,
@@ -58,11 +58,11 @@ patterns.push(function (node) {
 });
 
 patterns.push(function (node) {
-  // matching generic assignments to .version or 
+  // matching generic assignments to .version or
   // literals containing the property 'version'
   var result;
   if (node.left && node.left.property === 'version') {
-    result = { 
+    result = {
       version: node.right.end.value,
       line: node.right.end.line
     }
@@ -73,7 +73,7 @@ patterns.push(function (node) {
   }
 
   if (result) {
-    console.log('WARNING: found version number ' + result.version + 
+    console.log('WARNING: found version number ' + result.version +
       ', but not directly assigned to module or exports.');
   }
   return result;

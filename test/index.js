@@ -1,6 +1,8 @@
 var exec = require('child_process').exec
   , test = require('tap').test
-  , sync = require('../');
+  , sync = require('../')
+  , del = require('del')
+  , fs = require('fs-extra');
 
 var getVersion = function (filename) {
   return sync.getVersion(filename).version;
@@ -16,6 +18,7 @@ test('reading version numbers from simple text fixtures', function (t) {
   t.equal(getVersion('fixtures/literal.js'), '0.10.29', "object literal returned from a module function");
   t.equal(getVersion('fixtures/assigned-literal.js'), '7.7.7', "object literal assigned to exports");
   t.equal(getVersion('fixtures/amd.js'), '0.9.0', "object literal assigned to exports in AMD-style module");
+  t.equal(getVersion('fixtures/tsmodule.ts'), '0.0.1', "exports from TypeScript module");
   t.end();
 });
 
@@ -29,6 +32,8 @@ test('reading version numbers from actual libraries', function (t) {
 test('version numbers come with line number information', function (t) {
   t.equal(getLine('fixtures/package.json'), 4, 'Line numbers work for JSON.');
   t.equal(getLine('fixtures/complete/topojson.js'), 248, 'Line number determined correctly for topojson.js.');
+  t.equal(getLine('fixtures/tsmodule.ts'), 10, "Line numbers work for TypeScript module.");
+
   t.end();
 });
 
@@ -43,6 +48,14 @@ test('setting version numbers', function (t) {
   sync.setVersion(['fixtures/complete/topojson.js'], '0.0.11');
   t.equal(getVersion('fixtures/complete/topojson.js'), '0.0.11', 'topojson.js parsed correctly.');
   sync.setVersion(['fixtures/complete/topojson.js'], '0.0.10');
+
+  del.sync(['tmp']);
+  fs.ensureDirSync('tmp');
+  fs.copySync('fixtures/tsmodule.ts', 'tmp/tsmodule.ts');
+  // Do it on a ts file.
+  t.equal(getVersion('tmp/tsmodule.ts'), '0.0.1');
+  sync.setVersion(['tmp/tsmodule.ts'], '0.10.0');
+  t.equal(getVersion('tmp/tsmodule.ts'), '0.10.0');
 
   t.end();
 });
