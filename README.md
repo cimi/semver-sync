@@ -1,3 +1,5 @@
+__This is package is no longer maintained - check out [versync](https://github.com/lddubeau/versync) for a more up-to-date replacement!__
+
 # semver-sync
 
 `semver-sync` is a node.js module that enables you to synchronize version numbers accross `package.json`, `component.json` and other source files of your choosing.
